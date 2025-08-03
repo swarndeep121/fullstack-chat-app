@@ -11,9 +11,7 @@ export const signup = async (req, res) => {
     }
 
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters" });
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
     const user = await User.findOne({ email });
@@ -79,16 +77,7 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    // ❌ OLD way (may fail for cross-origin cookies)
-    // res.cookie("jwt", "", { maxAge: 0 });
-
-    // ✅ NEW way - ensures cross-site cookie deletion
-    res.clearCookie("jwt", {
-      httpOnly: true,     // same as when it was set
-      secure: true,       // required for HTTPS
-      sameSite: "none",   // required for cross-site
-    });
-
+    res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
