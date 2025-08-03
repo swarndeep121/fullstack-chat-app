@@ -3,7 +3,9 @@ import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = "https://fullstack-chat-app-76jx.onrender.com/api";
+// ✅ Split API and Socket URLs
+const API_BASE_URL = "https://fullstack-chat-app-76jx.onrender.com/api";
+const SOCKET_BASE_URL = "https://fullstack-chat-app-76jx.onrender.com";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -48,7 +50,6 @@ export const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
       toast.success("Logged in successfully");
-
       get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
@@ -82,23 +83,30 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  // ✅ Updated socket connection
   connectSocket: () => {
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io(BASE_URL, {
+    const socket = io(SOCKET_BASE_URL, {
+      withCredentials: true,
+      transports: ["websocket"], // Prefer WebSocket
       query: {
         userId: authUser._id,
       },
     });
-    socket.connect();
 
-    set({ socket: socket });
+    set({ socket });
 
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
+
+    socket.on("connect_error", (err) => {
+      console.error("Socket connection error:", err.message);
+    });
   },
+
   disconnectSocket: () => {
     if (get().socket?.connected) get().socket.disconnect();
   },

@@ -13,7 +13,8 @@ const io = new Server(server, {
     ],
     methods: ["GET", "POST"],
     credentials: true
-  }
+  },
+  transports:["polling","websocket"]
 });
 
 // Store online users: { userId: socketId }
