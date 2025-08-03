@@ -41,5 +41,6 @@ app.get("*", (req, res) => {
 
 server.listen(PORT, () => {
   console.log("server is running on PORT:" + PORT);
+  console.log("JWT_SECRET:", process.env.JWT_SECRET ? "Set" : "Not set");
   connectDB();
 });

@@ -14,7 +14,7 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
+      set(  { users: res.data });
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -48,8 +48,13 @@ export const useChatStore = create((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
+    if (!socket) return;
+
+    // Remove any existing listeners to prevent duplicates
+    socket.off("newMessage");
 
     socket.on("newMessage", (newMessage) => {
+      console.log("New message received:", newMessage);
       const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
       if (!isMessageSentFromSelectedUser) return;
 
