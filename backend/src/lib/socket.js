@@ -9,7 +9,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:5173",                      // Local development
-      "https://fullstack-chat-app-76jx.onrender.com" // Production frontend on Render
+      "https://fullstack-chat-app-76jx.onrender.com" ,
+      "https://chat-man-22.netlify.app",
     ],
     methods: ["GET", "POST"],
     credentials: true

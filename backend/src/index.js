@@ -22,7 +22,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",                      // Local dev
-      "https://fullstack-chat-app-76jx.onrender.com" // Production
+      "https://fullstack-chat-app-76jx.onrender.com" ,
+      "https://chat-man-22.netlify.app"
     ],
     credentials: true,
   })
